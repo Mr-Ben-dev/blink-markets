@@ -127,7 +127,7 @@ export const Footer = () => {
           <div className="flex items-center space-x-4">
             <Logo className="h-8 w-auto" animated={false} />
             <span className="text-sm text-foreground-muted">
-              © 2024 Blink Markets. Built on Linera.
+              © 2025 Blink Markets. Built on Linera.
             </span>
           </div>
 
