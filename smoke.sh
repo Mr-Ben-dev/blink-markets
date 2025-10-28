@@ -3,48 +3,38 @@ set -euo pipefail
 
 SITE_URL="${SITE_URL:-https://blink-markets.vercel.app}"
 SERVICE_URL="${SERVICE_URL:-https://veterans-pockets-marco-wants.trycloudflare.com}"
-WAVE="${WAVE:-1}" # 1 = Wave 1 (GraphQL optional), 2+ = require GraphQL
+WAVE="${WAVE:-1}" # 1=Wave 1 (GraphQL optional), 2+=require GraphQL
 
 echo "🚀 Running Wave ${WAVE} Completion Smoke Tests"
 echo "Site: ${SITE_URL}"
 echo "Service: ${SERVICE_URL}"
-echo
 
-status=$(curl -s -o /dev/null -w "%{http_code}" "${SITE_URL}")
-if [[ "${status}" == "200" ]]; then
-  echo "✅ OK: Site 200"
+# ---- Site check (follow redirects, accept any 2xx) ----
+site_status=$(curl -sS -o /dev/null -L --connect-timeout 5 --max-time 10 -w "%{http_code}" "${SITE_URL}")
+if [[ "${site_status}" =~ ^2[0-9]{2}$ ]]; then
+  echo "✅ OK: Site ${site_status}"
 else
-  echo "❌ FAIL: Site returned ${status}"
+  echo "❌ FAIL: Site returned ${site_status}"
   exit 1
 fi
 
-check_graphql() {
+# ---- GraphQL check (no pipefail issues) ----
+curl_q() {
   local url="$1"
-  local ok=1
-  # Try POST to root
-  if curl -sS -X POST "${url}" \
-       -H 'content-type: application/json' \
-       --data '{"query":"{ __typename }"}' \
-       --max-time 10 \
-       | grep -q '__typename' 2>/dev/null
-  then ok=0
-  # Else try /graphql
-  elif curl -sS -X POST "${url%/}/graphql" \
-       -H 'content-type: application/json' \
-       --data '{"query":"{ __typename }"}' \
-       --max-time 10 \
-       | grep -q '__typename' 2>/dev/null
-  then ok=0
-  fi
-  return ${ok}
+  local resp
+  resp=$(curl -sS -X POST "${url}" \
+      -H 'content-type: application/json' \
+      --connect-timeout 5 --max-time 10 \
+      --data '{"query":"{ __typename }"}' 2>/dev/null || true)
+  grep -q '__typename' <<<"${resp}" 2>/dev/null
 }
 
-if check_graphql "${SERVICE_URL}"; then
+GRAPHQL_OK=0
+if curl_q "${SERVICE_URL}" || curl_q "${SERVICE_URL%/}/graphql"; then
   echo "✅ OK: GraphQL responding"
   GRAPHQL_OK=1
 else
   echo "⚠️  WARN: No working GraphQL endpoint found at / or /graphql"
-  GRAPHQL_OK=0
 fi
 
 if (( WAVE >= 2 )) && [[ "${GRAPHQL_OK}" -ne 1 ]]; then
@@ -52,18 +42,4 @@ if (( WAVE >= 2 )) && [[ "${GRAPHQL_OK}" -ne 1 ]]; then
   exit 1
 fi
 
-echo
 echo "🎉 PASS: Wave ${WAVE} smoke tests complete"
-echo
-echo "📊 Summary:"
-echo "- ✅ Vercel site responding (200 OK)"
-if [[ "${GRAPHQL_OK}" == "1" ]]; then
-  echo "- ✅ GraphQL tunnel working (${SERVICE_URL})"
-else
-  echo "- ⚠️  GraphQL tunnel offline (expected for Wave 1)"
-fi
-echo "- ✅ Frontend gracefully handles service unavailability"
-echo
-echo "🌐 Live URLs:"
-echo "- Frontend: https://blink-markets.vercel.app"
-echo "- Backend: ${SERVICE_URL} (ephemeral)"

@@ -182,12 +182,34 @@ Complete technical documentation, verification steps, and evidence files for Wav
 
 **[View Wave 1 Deliverables →](https://github.com/Mr-Ben-dev/blink-markets/tree/main/wave1)**
 
-Includes:
-- Technical verification results
-- GraphQL schema documentation  
-- Smoke test outputs
-- System architecture evidence
-- Deployment verification
+### Evidence Files:
+- `README.md` – Complete Wave 1 documentation and verification guide
+- `info.txt` – System versions, timestamps, and commit hash (560c87f)
+- `site_http.txt` – HTTP 200 response verification from live site
+- `gql_typename.json` – GraphQL basic connectivity test result
+- `gql_schema.json` – GraphQL schema introspection data
+- `gql_version.json` – Backend service version information
+- `smoke_test_results.log` – Automated test suite output with PASS status
+
+### How to Run Smoke Tests:
+```bash
+# Default (Wave 1 - GraphQL optional)
+./smoke.sh
+
+# Force Wave 2 rules (GraphQL required)
+WAVE=2 ./smoke.sh
+
+# Override URLs if needed
+SITE_URL="https://your-site.com" SERVICE_URL="https://your-tunnel.com" ./smoke.sh
+```
+
+### Optional: Quick Live Demo
+```bash
+# Temporarily bring up GraphQL service (not required for Wave 1)
+cloudflared tunnel --url http://localhost:8080
+# Copy the tunnel URL to Vercel as VITE_SERVICE_URL and redeploy
+# Remove after recording; Wave 1 does not require live GraphQL
+```
 
 ## �📄 License
 
