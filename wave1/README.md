@@ -6,7 +6,7 @@ This folder contains evidence and documentation for **Wave 1 completion** of Bli
 ## ✅ Wave 1 Achievement Summary
 - **Status**: COMPLETE
 - **Captured**: October 28, 2025
-- **Git Tag**: wave1-complete (commit: cc00b62)
+- **Git Tag**: wave1-complete (commit: 560c87f)
 - **Backend Service**: Local devnet faucet via Cloudflare tunnel
 - **Deployed Site**: https://blink-markets.vercel.app/
 
