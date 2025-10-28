@@ -83,7 +83,7 @@ npm run preview
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Service URL (for production, set to your Cloudflare tunnel)
+# Service URL (optional for Wave 1 - if unset or unreachable, UI runs in Demo Mode)
 VITE_SERVICE_URL=https://your-tunnel.trycloudflare.com
 
 # App ID (leave empty for Wave 1 faucet service)
@@ -92,9 +92,11 @@ VITE_APP_ID=
 # Wallet functionality (set to "false" for Wave 1)
 VITE_ENABLE_WALLET=false
 
-# Demo mode (set to "false" for Wave 1)
+# Demo mode (set to "false" for Wave 1, "true" to force mock data)
 VITE_DEMO_MODE=false
 ```
+
+**Wave 1 Note**: All variables are optional. The app gracefully falls back to demo mode with sample data if backend services are unavailable.
 
 ## 🎯 Architecture
 
@@ -207,6 +209,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**⚠️ WAVE 1 DISCLAIMER**: Blink Markets Wave 1 is running on local devnet with sample data. All markets are for demonstration purposes only. Wave 2 will introduce live trading functionality.
+**⚠️ WAVE 1 DISCLAIMER**: Blink Markets Wave 1 is running on local devnet with sample data. All markets are for demonstration purposes only. The Cloudflare tunnel for the GraphQL service is ephemeral and may be offline; the app falls back to mock data. Wave 2 will introduce live trading functionality.
 
 Made with ⚡ by the Blink Markets team
