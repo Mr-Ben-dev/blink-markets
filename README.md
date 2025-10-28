@@ -5,6 +5,20 @@
 ![Blink Markets](https://img.shields.io/badge/Built%20on-Linera-5CF0D1?style=for-the-badge)
 ![Version](https://img.shields.io/badge/Version-0.1.0-8B5CF6?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)
+![Wave 1 Complete](https://img.shields.io/badge/Wave%201-Complete-28a745?style=for-the-badge)
+
+## 🎯 Wave 1 Status: COMPLETE ✅
+
+**Live Demo**: [https://blink-markets.vercel.app/](https://blink-markets.vercel.app/)
+
+Wave 1 demonstrates the foundational architecture with:
+- ✅ React frontend with modern UI components
+- ✅ Linera blockchain integration via GraphQL
+- ✅ Real-time chain status connectivity  
+- ✅ Sample prediction markets interface
+- ✅ Professional deployment on Vercel
+
+See `/wave1/` folder for complete technical evidence and verification steps.
 
 ## 🚀 Overview
 
@@ -69,11 +83,17 @@ npm run preview
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-VITE_APP_ID=your_linera_app_id
-VITE_FAUCET_URL=https://faucet.testnet-conway.linera.net
-VITE_NETWORK_NAME=conway-testnet
-VITE_GRAPHQL_ENDPOINT=http://localhost:8080
-VITE_WS_ENDPOINT=ws://localhost:8080/notifications
+# Service URL (for production, set to your Cloudflare tunnel)
+VITE_SERVICE_URL=https://your-tunnel.trycloudflare.com
+
+# App ID (leave empty for Wave 1 faucet service)
+VITE_APP_ID=
+
+# Wallet functionality (set to "false" for Wave 1)
+VITE_ENABLE_WALLET=false
+
+# Demo mode (set to "false" for Wave 1)
+VITE_DEMO_MODE=false
 ```
 
 ## 🎯 Architecture
@@ -136,18 +156,18 @@ src/
 
 ## 🗺️ Roadmap
 
-### Wave 1: Foundation ✅ (Oct 20-29, 2024)
-- Conway testnet deployment
+### Wave 1: Foundation ✅ (Oct 20–28, 2025)
+- Local devnet deployment
 - Basic market contracts
 - GraphQL service
-- Frontend with wallet creation
+- Frontend with faucet wallet creation
 
-### Wave 2: Temporary Chains 🚧 (Nov 3-12, 2024)
+### Wave 2: Temporary Chains � (Nov 3–12, 2025)
 - Market Factory implementation
 - Cross-chain messaging
 - Order matching engine
 
-### Wave 3: JIT Oracle Mesh 📅 (Nov 17-26, 2024)
+### Wave 3: JIT Oracle Mesh 📅 (Nov 17–26, 2025)
 - Time-bounded queries
 - Validator attestation
 - Median-of-N consensus
@@ -156,7 +176,7 @@ src/
 
 ## � Deploy to Vercel (Wave 1)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/blink-markets)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Mr-Ben-dev/blink-markets)
 
 ### Deployment Steps
 
@@ -169,11 +189,13 @@ src/
 
 3. **Environment Variables** (Optional):
    ```bash
-   VITE_LINERA_SERVICE_URL=https://your-public-linera-service.com
+   VITE_SERVICE_URL=https://your-tunnel.trycloudflare.com
+   VITE_ENABLE_WALLET=false
+   VITE_DEMO_MODE=false
    ```
    
-   - If you don't set this, the app will run in **Demo Mode** with mock data
-   - For live chain data, you'll need a publicly accessible Linera service
+   - If you don't set `VITE_SERVICE_URL`, the app will run in **Demo Mode** with mock data
+   - For live chain data, you'll need a publicly accessible Linera service via Cloudflare tunnel
 
 4. **Deploy**: Vercel handles the build automatically using `npm run build`
 
@@ -188,18 +210,20 @@ cp .env.example .env
 # 2. Install dependencies
 npm ci
 
-# 3. Initialize testnet wallet (choose A or B)
-npm run tn:init        # Testnet
-# OR
+# 3. Initialize local devnet
 npm run local:up       # Local devnet
 
 # 4. Build and deploy contract
 npm run wasm:build
-npm run tn:publish     # or npm run local:publish
+npm run local:publish
 
-# 5. Start services
+# 5. Start services with Cloudflare tunnel
 npm run linera:service  # Terminal 1 (port 8080)
-npm run dev            # Terminal 2 (port 5173)
+# In another terminal, start tunnel:
+cloudflared tunnel --url http://localhost:8080
+
+# 6. Start frontend
+npm run dev            # Terminal 3 (port 5173)
 ```
 
 ### Production Considerations
@@ -231,6 +255,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**⚠️ TESTNET DISCLAIMER**: Blink Markets is currently running on Conway Testnet. All tokens and markets are for testing purposes only and have no monetary value. Use at your own risk.
+**⚠️ WAVE 1 DISCLAIMER**: Blink Markets Wave 1 is running on local devnet with sample data. All markets are for demonstration purposes only. Wave 2 will introduce live trading functionality.
 
 Made with ⚡ by the Blink Markets team
