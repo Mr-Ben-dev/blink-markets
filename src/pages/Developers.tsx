@@ -8,6 +8,10 @@ import { useState } from "react";
 
 export default function Developers() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  const serviceUrl = import.meta.env.VITE_SERVICE_URL || "https://veterans-pockets-marco-wants.trycloudflare.com";
+  const appId = import.meta.env.VITE_APP_ID || "";
+  const showDemo = import.meta.env.VITE_DEMO_MODE === "true";
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -16,14 +20,11 @@ export default function Developers() {
   };
 
   const codeExamples = {
-    cli: `# Install CLI
-npm install -g @linera/cli
-
-# Create wallet
-linera wallet init --faucet https://faucet.testnet-conway.linera.net
-
-# Deploy your first market
-linera deploy market --template prediction`,
+    cli: `# Wave 1: verify your service
+SERVICE="https://veterans-pockets-marco-wants.trycloudflare.com"
+curl -s -o /dev/null -w "SERVICE %{http_code}\\n" "$SERVICE"
+curl -sS -X POST "$SERVICE" -H 'content-type: application/json' --data '{"query":"{ __typename }"}'
+curl -sS -X POST "$SERVICE" -H 'content-type: application/json' --data '{"query":"{ __schema { queryType { name } } }"}'`,
     
     graphql: `query GetMarkets {
   markets(first: 10, status: OPEN) {
@@ -234,33 +235,37 @@ const positions = await blink.get_positions({
             <div className="space-y-4">
               <div>
                 <div className="text-sm text-foreground-secondary mb-1">Network</div>
-                <div className="font-bold text-primary">Conway Testnet</div>
+                <div className="font-bold text-primary">Local devnet (Wave 1)</div>
               </div>
               <div>
                 <div className="text-sm text-foreground-secondary mb-1">App ID</div>
-                <div className="font-mono text-sm flex items-center justify-between">
-                  <span>e476187f6ddfeb9d588c7b45d3df334d5501d6499b3f9ad5595cae86cce16a65010000000000000001000000</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => copyToClipboard('e476187f6ddfeb9d588c7b45d3df334d5501d6499b3f9ad5595cae86cce16a65010000000000000001000000', 'appid')}
-                  >
-                    {copiedId === 'appid' ? (
-                      <Check className="h-4 w-4 text-success" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
+                {appId ? (
+                  <div className="font-mono text-sm flex items-center justify-between">
+                    <span>{appId}</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(appId, 'appid')}
+                    >
+                      {copiedId === 'appid' ? (
+                        <Check className="h-4 w-4 text-success" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-sm text-foreground-secondary">N/A for Wave 1 — faucet service only</div>
+                )}
               </div>
               <div>
                 <div className="text-sm text-foreground-secondary mb-1">GraphQL Endpoint</div>
                 <div className="font-mono text-sm flex items-center justify-between">
-                  <span>http://localhost:8080</span>
+                  <span>{serviceUrl}</span>
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => copyToClipboard('http://localhost:8080', 'graphql-endpoint')}
+                    onClick={() => copyToClipboard(serviceUrl, 'graphql-endpoint')}
                   >
                     {copiedId === 'graphql-endpoint' ? (
                       <Check className="h-4 w-4 text-success" />
@@ -328,7 +333,15 @@ const positions = await blink.get_positions({
               </div>
             </div>
             <div className="lg:w-96">
-              <DemoAction />
+              {showDemo ? (
+                <DemoAction />
+              ) : (
+                <Card className="p-6 glass border-border/50">
+                  <div className="text-sm text-foreground-secondary">
+                    Live contract demo will be enabled in Wave 2 (custom app).
+                  </div>
+                </Card>
+              )}
             </div>
           </div>
         </motion.section>

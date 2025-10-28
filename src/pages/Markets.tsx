@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Search, Filter, TrendingUp, Clock, DollarSign } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockMarkets, categories, stats } from "@/utils/mockData";
+import { categories, mockMarkets, stats } from "@/utils/mockData";
+import { motion } from "framer-motion";
+import { Clock, DollarSign, Filter, Search, TrendingUp } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Markets() {
@@ -55,6 +55,12 @@ export default function Markets() {
       </div>
 
       <div className="container mx-auto px-4">
+        {/* Wave 1 Demo Banner */}
+        <div className="mb-6">
+          <Badge className="bg-warning/10 text-warning border-warning/20">
+            Wave 1 demo: markets and prices are sample data; trading is disabled.
+          </Badge>
+        </div>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">

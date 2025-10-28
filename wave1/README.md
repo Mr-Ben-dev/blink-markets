@@ -4,11 +4,11 @@
 This folder contains evidence and documentation for **Wave 1 completion** of Blink Markets - a real-time prediction market platform built on Linera blockchain.
 
 ## ✅ Wave 1 Achievement Summary
-- **Status**: ✅ COMPLETE
+- **Status**: COMPLETE
+- **Captured**: October 28, 2025
+- **Git Tag**: wave1-complete (commit: cc00b62)
+- **Backend Service**: Local devnet faucet via Cloudflare tunnel
 - **Deployed Site**: https://blink-markets.vercel.app/
-- **Backend Service**: https://veterans-pockets-marco-wants.trycloudflare.com (Linera v0.15.3 Faucet)
-- **Commit Tag**: `wave1-complete` (cc00b62)
-- **Date**: October 29, 2025
 
 ## 🌐 Live URLs
 - **Frontend**: https://blink-markets.vercel.app/

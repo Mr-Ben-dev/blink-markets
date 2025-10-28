@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const walletEnabled = import.meta.env.VITE_ENABLE_WALLET === "true";
 
   const navItems = [
     { label: "Markets", path: "/markets" },
@@ -48,7 +49,7 @@ export const Navbar = () => {
             {/* Network Status */}
             <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-success/10 border border-success/20">
               <div className="w-2 h-2 rounded-full bg-success animate-pulse-glow" />
-              <span className="text-xs font-medium text-success">Conway Testnet</span>
+              <span className="text-xs font-medium text-success">Local devnet</span>
             </div>
 
             {/* Notifications */}
@@ -58,10 +59,17 @@ export const Navbar = () => {
             </Button>
 
             {/* Connect Wallet */}
-            <Button className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity">
-              <Wallet className="h-4 w-4" />
-              <span>Connect Wallet</span>
-            </Button>
+            {walletEnabled ? (
+              <Button className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity">
+                <Wallet className="h-4 w-4" />
+                <span>Connect Wallet</span>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled title="Wallet coming in Wave 2" className="hidden md:flex items-center space-x-2">
+                <Wallet className="h-4 w-4" />
+                <span>Connect Wallet</span>
+              </Button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button

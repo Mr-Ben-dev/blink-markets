@@ -1,8 +1,8 @@
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 import { CheckCircle2, Circle, Clock } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 
 interface Wave {
   number: number;
@@ -21,11 +21,11 @@ export default function Roadmap() {
     {
       number: 1,
       title: "Foundation",
-      dates: "Oct 20-29, 2024",
+      dates: "Oct 20–28, 2025",
       status: "completed",
       progress: 100,
       items: [
-        { label: "Deploy to Conway testnet", completed: true },
+        { label: "Deploy to local devnet", completed: true },
         { label: "Basic market contract in Rust", completed: true },
         { label: "GraphQL service implementation", completed: true },
         { label: "Frontend with faucet wallet creation", completed: true },
@@ -36,9 +36,9 @@ export default function Roadmap() {
     {
       number: 2,
       title: "Temporary Chains",
-      dates: "Nov 3-12, 2024",
-      status: "in-progress",
-      progress: 45,
+      dates: "Nov 3–12, 2025",
+      status: "upcoming",
+      progress: 0,
       items: [
         { label: "Market Factory implementation", completed: false },
         { label: "One chain per market pattern", completed: false },
@@ -51,7 +51,7 @@ export default function Roadmap() {
     {
       number: 3,
       title: "JIT Oracle Mesh",
-      dates: "Nov 17-26, 2024",
+      dates: "Nov 17–26, 2025",
       status: "upcoming",
       progress: 0,
       items: [
@@ -66,7 +66,7 @@ export default function Roadmap() {
     {
       number: 4,
       title: "Agent API & Wallets",
-      dates: "Dec 1-10, 2024",
+      dates: "Dec 1–10, 2025",
       status: "upcoming",
       progress: 0,
       items: [
@@ -81,7 +81,7 @@ export default function Roadmap() {
     {
       number: 5,
       title: "Scale & Analytics",
-      dates: "Dec 15, 2024 - Jan 7, 2025",
+      dates: "Dec 15, 2025 – Jan 7, 2026",
       status: "upcoming",
       progress: 0,
       items: [
@@ -96,7 +96,7 @@ export default function Roadmap() {
     {
       number: 6,
       title: "Production Ready",
-      dates: "Jan 12-21, 2025",
+      dates: "Jan 12–21, 2026",
       status: "upcoming",
       progress: 0,
       items: [
