@@ -198,7 +198,10 @@ const positions = await blink.get_positions({
           
           <Card className="glass gradient-bg border-border/50 overflow-hidden">
             <div className="bg-surface/50 p-4 flex items-center justify-between border-b border-border/50">
-              <span className="text-sm font-mono text-foreground-secondary">GraphQL Query</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-mono text-foreground-secondary">GraphQL Query</span>
+                <Badge variant="outline" className="text-xs">Example only</Badge>
+              </div>
               <Button
                 size="sm"
                 variant="ghost"
@@ -293,7 +296,10 @@ const positions = await blink.get_positions({
           
           <Card className="glass gradient-bg border-border/50 overflow-hidden">
             <div className="bg-surface/50 p-4 flex items-center justify-between border-b border-border/50">
-              <span className="text-sm font-mono text-foreground-secondary">TypeScript</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-mono text-foreground-secondary">TypeScript</span>
+                <Badge variant="outline" className="text-xs">Example only</Badge>
+              </div>
               <Button
                 size="sm"
                 variant="ghost"

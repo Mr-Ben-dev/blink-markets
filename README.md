@@ -172,68 +172,20 @@ src/
 - Validator attestation
 - Median-of-N consensus
 
-[View Full Roadmap](/roadmap)
+[View Full Roadmap](https://blink-markets.vercel.app/roadmap)
 
-## � Deploy to Vercel (Wave 1)
+## 📦 Wave 1 Technical Evidence
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Mr-Ben-dev/blink-markets)
+Complete technical documentation, verification steps, and evidence files for Wave 1 submission:
 
-### Deployment Steps
+**[View Wave 1 Deliverables →](https://github.com/Mr-Ben-dev/blink-markets/tree/main/wave1)**
 
-1. **Fork this repository** to your GitHub account
-
-2. **Connect to Vercel**:
-   - Sign up at [vercel.com](https://vercel.com)
-   - Import your forked repository
-   - Vercel will auto-detect the Vite framework
-
-3. **Environment Variables** (Optional):
-   ```bash
-   VITE_SERVICE_URL=https://your-tunnel.trycloudflare.com
-   VITE_ENABLE_WALLET=false
-   VITE_DEMO_MODE=false
-   ```
-   
-   - If you don't set `VITE_SERVICE_URL`, the app will run in **Demo Mode** with mock data
-   - For live chain data, you'll need a publicly accessible Linera service via Cloudflare tunnel
-
-4. **Deploy**: Vercel handles the build automatically using `npm run build`
-
-### Local Development with Live Chain
-
-For local development with real blockchain integration:
-
-```bash
-# 1. Copy environment template
-cp .env.example .env
-
-# 2. Install dependencies
-npm ci
-
-# 3. Initialize local devnet
-npm run local:up       # Local devnet
-
-# 4. Build and deploy contract
-npm run wasm:build
-npm run local:publish
-
-# 5. Start services with Cloudflare tunnel
-npm run linera:service  # Terminal 1 (port 8080)
-# In another terminal, start tunnel:
-cloudflared tunnel --url http://localhost:8080
-
-# 6. Start frontend
-npm run dev            # Terminal 3 (port 5173)
-```
-
-### Production Considerations
-
-- **Static Deployment**: The frontend is a static Vite app that works without a backend
-- **Chain Integration**: Set `VITE_LINERA_SERVICE_URL` to your public Linera service for live data
-- **Demo Mode**: App gracefully falls back to mock data if service is unreachable
-- **Performance**: All chain interactions are non-blocking and cached
-
-See [docs/README-wave1.md](./docs/README-wave1.md) for detailed setup instructions.
+Includes:
+- Technical verification results
+- GraphQL schema documentation  
+- Smoke test outputs
+- System architecture evidence
+- Deployment verification
 
 ## �📄 License
 
