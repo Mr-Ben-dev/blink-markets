@@ -1,0 +1,8 @@
+Wave 1 Evidence Capture
+=======================
+Wed Oct 29 00:39:23 EEST 2025
+commit: cc00b62
+linera: linera 
+cloudflared: cloudflared version 2025.10.0 (built 2025-10-14-19:01 UTC)
+site: https://blink-markets.vercel.app
+tunnel: https://veterans-pockets-marco-wants.trycloudflare.com
