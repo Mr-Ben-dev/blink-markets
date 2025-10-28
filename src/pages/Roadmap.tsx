@@ -25,12 +25,12 @@ export default function Roadmap() {
       status: "completed",
       progress: 100,
       items: [
-        { label: "Deploy to local devnet", completed: true },
-        { label: "Basic market contract in Rust", completed: true },
-        { label: "GraphQL service implementation", completed: true },
-        { label: "Frontend with faucet wallet creation", completed: true },
-        { label: "Live notifications demonstration", completed: true },
-        { label: "Architecture documentation", completed: true },
+        { label: "Vercel deployment (live)", completed: true },
+        { label: "GraphQL client integration (optional for W1)", completed: true },
+        { label: "Graceful fallback to sample data", completed: true },
+        { label: "Chain status indicator (real-time UI state)", completed: true },
+        { label: "Sample market UI (mock data)", completed: true },
+        { label: "Documentation + evidence package", completed: true },
       ],
     },
     {
@@ -40,6 +40,9 @@ export default function Roadmap() {
       status: "upcoming",
       progress: 0,
       items: [
+        { label: "Local devnet + persistent tunnel", completed: false },
+        { label: "Custom market contract deployment", completed: false },
+        { label: "Wallet operations (faucet/tx signing)", completed: false },
         { label: "Market Factory implementation", completed: false },
         { label: "One chain per market pattern", completed: false },
         { label: "Cross-chain message routing", completed: false },

@@ -161,6 +161,9 @@ export const Footer = () => {
             <span>Powered by</span>
             <span className="font-bold gradient-text">Linera</span>
           </a>
+          <div className="mt-2 text-xs text-foreground-muted">
+            Wave 1 demo • commit 560c87f
+          </div>
         </div>
       </div>
     </footer>
