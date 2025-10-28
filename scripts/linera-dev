@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+root="$(pwd)"
+dir="$root/.linera/dev"
+mkdir -p "$dir"
+export LINERA_WALLET="$dir/wallet.json"
+export LINERA_KEYSTORE="$dir/keystore.json"
+export LINERA_STORAGE="rocksdb:$dir/wallet.db"
+exec linera "$@"

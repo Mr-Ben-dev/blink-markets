@@ -1,0 +1,16 @@
+# linera and secrets
+.linera/
+.env
+.env.local
+.env.*.local
+
+# node
+node_modules/
+dist/
+
+# rust
+target/
+**/*.rs.bk
+**/wallet.json
+**/keystore.json
+**/*.db

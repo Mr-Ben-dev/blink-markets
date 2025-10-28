@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.86.0
+        override: true
+        components: clippy
+    
+    - name: Add wasm target
+      run: rustup target add wasm32-unknown-unknown
+    
+    - name: Install system deps (clang/lld)
+      run: sudo apt-get update && sudo apt-get install -y clang lld pkg-config libssl-dev
+    
+    - name: Cargo cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "blink_markets -> blink_markets/target"
+    
+    - name: Build WASM
+      run: cargo build -p blink_markets --release --target wasm32-unknown-unknown
+    
+    - name: Clippy
+      run: cargo clippy -p blink_markets -- -D warnings
+    
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: "npm"
+    
+    - name: Install deps
+      run: npm ci
+    
+    - name: Typecheck
+      run: npm run typecheck
+    
+    - name: Lint
+      run: npm run lint
+    
+    - name: Build frontend
+      run: npm run build
