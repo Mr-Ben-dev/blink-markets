@@ -1,1 +1,0 @@
-{"data":{"__schema":{"queryType":{"name":"QueryRoot","fields":[{"name":"version"},{"name":"genesisConfig"},{"name":"currentValidators"},{"name":"currentCommittee"}]}}}}
