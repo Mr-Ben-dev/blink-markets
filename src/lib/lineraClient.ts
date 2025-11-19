@@ -24,6 +24,13 @@ export function getServiceUrl(): string {
 }
 
 /**
+ * Get the GraphQL endpoint URL (with chain and application path)
+ */
+export function getGraphQLUrl(): string {
+  return import.meta.env.VITE_GRAPHQL_URL || getServiceUrl();
+}
+
+/**
  * Ping the Linera service to check connectivity
  * Returns true if service responds, false otherwise
  */
@@ -51,10 +58,10 @@ export async function ping(signal?: AbortSignal): Promise<boolean> {
  */
 export async function queryValue(signal?: AbortSignal): Promise<number | null> {
   try {
-    const url = getServiceUrl();
-    const query = '{ value }';
+    const url = getGraphQLUrl();
+    const query = '{ blockHeight }'; // Changed from 'value' to 'blockHeight' which exists
     
-    const response = await fetch(`${url}/`, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +81,7 @@ export async function queryValue(signal?: AbortSignal): Promise<number | null> {
       throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
     }
 
-    return result.data?.value ?? null;
+    return result.data?.blockHeight ?? null;
   } catch (error) {
     console.warn('Failed to query value:', error);
     return null;

@@ -49,7 +49,7 @@ export const Navbar = () => {
             {/* Network Status */}
             <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-success/10 border border-success/20">
               <div className="w-2 h-2 rounded-full bg-success animate-pulse-glow" />
-              <span className="text-xs font-medium text-success">Local devnet</span>
+              <span className="text-xs font-medium text-success">Local Network</span>
             </div>
 
             {/* Notifications */}

@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  linera-network:
+    image: lineradev/linera:latest
+    container_name: blink-linera-network
+    command: |
+      sh -c "linera net up --testing-prng-seed 37 --initial-amount 1000 && tail -f /dev/null"
+    volumes:
+      - linera-data:/tmp/.config/linera
+    networks:
+      - blink-network
+    healthcheck:
+      test: ["CMD", "linera", "wallet", "show"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  linera-service:
+    image: lineradev/linera:latest
+    container_name: blink-linera-service
+    depends_on:
+      linera-network:
+        condition: service_healthy
+    command: |
+      sh -c "linera service --port 8080 --external-signing false"
+    ports:
+      - "8080:8080"
+    volumes:
+      - linera-data:/tmp/.config/linera
+      - ./blink_markets/target/wasm32-unknown-unknown/release:/app/wasm:ro
+    networks:
+      - blink-network
+    environment:
+      - RUST_LOG=info
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/graphql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blink-frontend
+    depends_on:
+      linera-service:
+        condition: service_healthy
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - ./index.html:/app/index.html:ro
+    networks:
+      - blink-network
+    environment:
+      - VITE_GRAPHQL_URL=http://linera-service:8080/graphql
+      - VITE_WS_GRAPHQL_URL=ws://linera-service:8080/graphql
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  linera-data:
+    driver: local
+
+networks:
+  blink-network:
+    driver: bridge

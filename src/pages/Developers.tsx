@@ -238,7 +238,7 @@ const positions = await blink.get_positions({
             <div className="space-y-4">
               <div>
                 <div className="text-sm text-foreground-secondary mb-1">Network</div>
-                <div className="font-bold text-primary">Local devnet (Wave 1)</div>
+                <div className="font-bold text-primary">Local Network (schedule_operation WORKING!)</div>
               </div>
               <div>
                 <div className="text-sm text-foreground-secondary mb-1">App ID</div>

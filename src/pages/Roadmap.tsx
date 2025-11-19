@@ -40,7 +40,7 @@ export default function Roadmap() {
       status: "upcoming",
       progress: 0,
       items: [
-        { label: "Local devnet + persistent tunnel", completed: false },
+        { label: "Conway Testnet deployment", completed: true },
         { label: "Custom market contract deployment", completed: false },
         { label: "Wallet operations (faucet/tx signing)", completed: false },
         { label: "Market Factory implementation", completed: false },

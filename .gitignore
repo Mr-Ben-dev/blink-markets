@@ -3,14 +3,52 @@
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
+
+# Linera wallet and keystore files
+**/wallet*.json
+**/keystore*.json
+**/*.wallet
+**/*.keystore
+
+# Linera storage databases
+**/*.db
+**/*.rocksdb
+**/rocksdb/
+/tmp/.tmp*/
+
+# Temporary deployment files
+/tmp/
+*.tmp
+*.log
 
 # node
 node_modules/
 dist/
+dist-ssr/
+*.local
 
 # rust
 target/
 **/*.rs.bk
-**/wallet.json
-**/keystore.json
-**/*.db
+Cargo.lock
+
+# Build artifacts
+*.wasm
+!blink_markets/target/wasm32-unknown-unknown/release/*.wasm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Backup files
+*.old.md
+*.backup

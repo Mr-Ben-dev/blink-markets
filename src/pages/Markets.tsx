@@ -3,28 +3,65 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { categories, mockMarkets, stats } from "@/utils/mockData";
+import { useToast } from "@/hooks/use-toast";
+import { MARKETS_QUERY, MARKET_UPDATES_SUBSCRIPTION, Market, query, subscribe } from "@/lib/graphqlClient";
+import { categories } from "@/utils/mockData";
 import { motion } from "framer-motion";
 import { Clock, DollarSign, Filter, Search, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Markets() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("volume");
+  const [markets, setMarkets] = useState<Market[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  const filteredMarkets = mockMarkets
+  // Fetch initial markets
+  useEffect(() => {
+    async function fetchMarkets() {
+      try {
+        const data = await query<{ markets: Market[] }>(MARKETS_QUERY);
+        setMarkets(data.markets);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch markets:", error);
+        toast({
+          title: "Failed to load markets",
+          description: "Connected to Conway Testnet. Check your connection to see live data.",
+          variant: "destructive",
+        });
+        setLoading(false);
+      }
+    }
+    fetchMarkets();
+  }, [toast]);
+
+  // Subscribe to real-time market updates
+  useEffect(() => {
+    const unsubscribe = subscribe<{ marketUpdates: Market[] }>(
+      MARKET_UPDATES_SUBSCRIPTION,
+      {},
+      (data) => {
+        setMarkets(data.marketUpdates);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
+
+  const filteredMarkets = markets
     .filter((market) => {
-      const matchesCategory = selectedCategory === "all" || market.category === selectedCategory;
-      const matchesSearch = market.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      const matchesCategory = selectedCategory === "all"; // Category removed from backend
+      const matchesSearch = market.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            market.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     })
     .sort((a, b) => {
-      if (sortBy === "volume") return b.volume - a.volume;
-      if (sortBy === "newest") return new Date(b.endTime).getTime() - new Date(a.endTime).getTime();
-      if (sortBy === "ending") return new Date(a.endTime).getTime() - new Date(b.endTime).getTime();
+      if (sortBy === "volume") return b.totalVolume - a.totalVolume;
+      if (sortBy === "newest") return b.id - a.id;
+      if (sortBy === "ending") return a.endTime - b.endTime;
       return 0;
     });
 
@@ -36,29 +73,35 @@ export default function Markets() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <div className="text-sm text-foreground-secondary">Total Markets</div>
-              <div className="text-xl font-bold text-primary">{stats.totalMarkets}</div>
+              <div className="text-xl font-bold text-primary">{markets.length}</div>
             </div>
             <div>
-              <div className="text-sm text-foreground-secondary">24h Volume</div>
-              <div className="text-xl font-bold text-secondary">${(stats.volume24h / 1000).toFixed(0)}K</div>
+              <div className="text-sm text-foreground-secondary">Total Pool</div>
+              <div className="text-xl font-bold text-secondary">
+                ${markets.reduce((sum, m) => sum + m.totalPool, 0).toLocaleString()}
+              </div>
             </div>
             <div>
               <div className="text-sm text-foreground-secondary">Active Now</div>
-              <div className="text-xl font-bold text-success">{stats.activeNow}</div>
+              <div className="text-xl font-bold text-success">
+                {markets.filter(m => !m.resolved).length}
+              </div>
             </div>
             <div>
-              <div className="text-sm text-foreground-secondary">Gas Price</div>
-              <div className="text-xl font-bold text-accent">{stats.gasPrice} LINERA</div>
+              <div className="text-sm text-foreground-secondary">Status</div>
+              <div className="text-xl font-bold text-accent">
+                {loading ? 'Loading...' : 'Live'}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4">
-        {/* Wave 1 Demo Banner */}
+        {/* Live Connection Banner */}
         <div className="mb-6">
-          <Badge className="bg-warning/10 text-warning border-warning/20">
-            Wave 1 demo: markets and prices are sample data; trading is disabled.
+          <Badge className={loading ? "bg-warning/10 text-warning border-warning/20" : "bg-success/10 text-success border-success/20"}>
+            {loading ? 'Connecting to Linera network...' : '🟢 Live data from Linera blockchain'}
           </Badge>
         </div>
         {/* Header */}
@@ -134,7 +177,7 @@ export default function Markets() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                      {market.category}
+                      {market.resolved ? 'Resolved' : 'Active'}
                     </Badge>
                     <div className="flex items-center space-x-1 text-foreground-muted">
                       <Clock className="h-3 w-3" />
@@ -146,22 +189,22 @@ export default function Markets() {
 
                   {/* Title */}
                   <h3 className="font-bold text-lg mb-3 group-hover:text-primary transition-colors line-clamp-2">
-                    {market.title}
+                    {market.question}
                   </h3>
 
-                  {/* Probability Bar */}
+                  {/* Pool Bar */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-foreground-secondary">Probability</span>
+                      <span className="text-sm text-foreground-secondary">Total Volume</span>
                       <span className="text-lg font-bold text-primary">
-                        {(market.probability * 100).toFixed(0)}%
+                        {market.totalVolume} tokens
                       </span>
                     </div>
                     <div className="h-2 bg-surface rounded-full overflow-hidden">
                       <motion.div
                         className="h-full bg-gradient-to-r from-primary to-secondary"
                         initial={{ width: 0 }}
-                        animate={{ width: `${market.probability * 100}%` }}
+                        animate={{ width: `${Math.min(100, (market.totalVolume / 100) * 10)}%` }}
                         transition={{ duration: 1, delay: index * 0.05 }}
                       />
                     </div>
@@ -171,30 +214,34 @@ export default function Markets() {
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center space-x-1 text-foreground-secondary">
                       <DollarSign className="h-4 w-4" />
-                      <span>${(market.volume / 1000).toFixed(0)}K</span>
+                      <span>{market.resolved ? 'Closed' : 'Open'}</span>
                     </div>
                     <div className="flex items-center space-x-1 text-foreground-secondary">
                       <TrendingUp className="h-4 w-4" />
-                      <span>{market.trades} trades</span>
+                      <span>{market.outcomes.length} options</span>
                     </div>
                   </div>
 
                   {/* Quick Action Buttons */}
                   <div className="mt-4 pt-4 border-t border-border/50 grid grid-cols-2 gap-2">
-                    <Button 
-                      size="sm" 
-                      className="bg-success/10 text-success hover:bg-success/20 border border-success/20"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      YES {(market.probability * 100).toFixed(0)}%
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      className="bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      NO {((1 - market.probability) * 100).toFixed(0)}%
-                    </Button>
+                    {market.outcomes.slice(0, 2).map((outcome, i) => {
+                      const volume = market.outcomeVolumes[i] || 0;
+                      const percentage = market.totalVolume > 0 ? (volume / market.totalVolume * 100).toFixed(0) : 0;
+                      return (
+                        <Button 
+                          key={i}
+                          size="sm" 
+                          className={i === 0 
+                            ? "bg-success/10 text-success hover:bg-success/20 border border-success/20"
+                            : "bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20"
+                          }
+                          onClick={(e) => e.preventDefault()}
+                          disabled={market.resolved}
+                        >
+                          {outcome} ({percentage}%)
+                        </Button>
+                      );
+                    })}
                   </div>
                 </Card>
               </Link>

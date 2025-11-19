@@ -19,8 +19,8 @@ if [[ ! -f "$CONTRACT" || ! -f "$SERVICE" ]]; then
 fi
 
 # Detect init args; if contract requires them, set INIT_JSON or default to empty.
-# Based on contract.rs: InstantiationArgument = u64, so we need a number
-INIT_JSON="${INIT_JSON:-42}"
+# Based on contract.rs: InstantiationArgument = (), so we use null
+INIT_JSON="${INIT_JSON:-null}"
 
 echo "===> Publishing and creating application on Testnet"
 echo "Using init argument: ${INIT_JSON}"
